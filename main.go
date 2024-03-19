@@ -1,0 +1,40 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"time"
+
+	"dagger.io/dagger"
+)
+
+func main() {
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
+	ctx := context.Background()
+	client, err := dagger.Connect(ctx, dagger.WithLogOutput(os.Stdout))
+	if err != nil {
+		return err
+	}
+	defer client.Close()
+	projectName := "test"
+	database := client.Container().From("mysql/mysql-server:8.0").
+		WithEnvVariable("MYSQL_DATABASE", projectName).
+		WithEnvVariable("MYSQL_USER", projectName).
+		WithEnvVariable("MYSQL_PASSWORD", projectName).
+		WithExposedPort(3306).
+		AsService()
+	database, err = database.Start(ctx)
+	if err != nil {
+		return err
+	}
+	time.Sleep(30 * time.Second)
+	database, err = database.Stop(ctx)
+	return err
+}
