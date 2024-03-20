@@ -28,6 +28,7 @@ func run() error {
 		WithEnvVariable("MYSQL_DATABASE", projectName).
 		WithEnvVariable("MYSQL_USER", projectName).
 		WithEnvVariable("MYSQL_PASSWORD", projectName).
+		WithEnvVariable("MYSQL_ALLOW_EMPTY_PASSWORD", "true").
 		WithExposedPort(3306).
 		AsService()
 	database, err = database.Start(ctx)
