@@ -24,7 +24,7 @@ func run() error {
 	}
 	defer client.Close()
 	projectName := "test"
-	database := client.Container().From("mysql/mysql-server:8.0").
+	database := client.Container().From("mysql:8.3").
 		WithEnvVariable("MYSQL_DATABASE", projectName).
 		WithEnvVariable("MYSQL_USER", projectName).
 		WithEnvVariable("MYSQL_PASSWORD", projectName).
