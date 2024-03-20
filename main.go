@@ -24,10 +24,11 @@ func run() error {
 	}
 	defer client.Close()
 	projectName := "test"
-	database := client.Container().From("mysql/mysql-server:8.0").
+	database := client.Container().From("mysql:8.0").
 		WithEnvVariable("MYSQL_DATABASE", projectName).
 		WithEnvVariable("MYSQL_USER", projectName).
 		WithEnvVariable("MYSQL_PASSWORD", projectName).
+		WithEnvVariable("MYSQL_ALLOW_EMPTY_PASSWORD", "true").
 		WithExposedPort(3306).
 		AsService()
 	database, err = database.Start(ctx)
